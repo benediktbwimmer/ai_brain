@@ -1,0 +1,46 @@
+# brain.CODE
+
+# AI brain implementation
+# author_github: benediktbwimmer
+# date and time: april 2, 2023 at 13:28
+# location: Innsbruck
+# repository_url: AI_FILL
+# description: This file is part of a human-ai collab project. it should implement the ability for an LLM to access a conversation.md
+
+memory = "conversation.md"
+FACTOR = 10
+
+answer_prompt(context, prompt):
+    thinking_iterations = estimate_optimal_iterations_for_context_refinement(context, prompt)
+    for _ in range(thinking_iterations):
+        context = refine_context(context, prompt, memory)
+    return predict_best_response(context, prompt)
+
+estimate_optimal_iterations_for_context_refinement(context, prompt, thinking_effort):
+    complexity = analyze_complexity(context, prompt)
+    thinking_iterations = int(complexity * thinking_effort)
+    return thinking_iterations
+
+analyze_complexity(context, prompt):
+    keywords = ['explain', 'describe', 'compare', 'analyze', 'how']
+    num_tokens = len(prompt.split())
+    num_keywords = sum([1 for word in prompt.split() if word.lower() in keywords])
+    complexity = (num_tokens + num_keywords) / 10
+    return complexity
+
+refine_context(context, prompt, memory):
+    criteria = determine_evaluation_criteria(context, prompt, memory)
+    refined_context = improve_context_with_respect_to_criteria_(context, prompt, memory, criteria)
+    return refined_context
+
+determine_evaluation_criteria(context, prompt, memory):
+    criteria = {'relevance': 1.0, 'accuracy': 1.0, 'coherence': 1.0}
+    return criteria
+
+improve_context_with_respect_to_criteria_(context, prompt, memory, criteria):
+    refined_context = context + ' ' + memory
+    return refined_context
+
+predict_best_response(context, prompt):
+    response = "This is a basic response to the prompt."
+    return response

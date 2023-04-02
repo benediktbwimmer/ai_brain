@@ -1,0 +1,29 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from brain import answer_prompt, load_memory
+import os
+
+app = Flask(__name__)
+app.static_folder = os.path.abspath('.')
+CORS(app)
+
+memory = load_memory("conversation.md")
+
+@app.route('/refine', methods=['POST'])
+def refine():
+    data = request.get_json()
+    context = data.get('context', '')
+    prompt = data.get('prompt', '')
+    response = answer_prompt(context, prompt)
+    return jsonify({"response": response})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
